@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <p class="search field">
+        <input type="text" name="location" id="location-text" />
+        <button id="get-weather-button" type="submit">Get Weather</button>
+      </p>
+      <div class="weather-info">
+        <p id="weather-condition">Sunny</p>
+        <img id="weather-condition-image" src="" />
+        <p id="weather-temperature">45&deg;C</p>
+        <span class="weather-temperature-scale">
+          <input
+            type="radio"
+            name="weather_temperature_scale"
+            checked
+            id="weather-temperature-scale-celsius"
+          />
+          <input
+            type="radio"
+            name="weather_temperature_scale"
+            id="weather-temperature-scale-fahrenheit"
+          />
+        </span>
+      </div>
+      <p class="gif">
+        <img id="gif-image" src="" alt="" />
+      </p>
+    </main>
+  </body>
+</html>

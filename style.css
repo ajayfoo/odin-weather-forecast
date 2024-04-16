@@ -1,0 +1,87 @@
+:root {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+body,
+p {
+  padding: 0;
+  margin: 0;
+}
+body {
+  height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  padding: 1em;
+  border: 1px solid black;
+  border-radius: 25px;
+}
+
+main > :last-child {
+  margin-bottom: 0;
+}
+
+.search.field {
+  display: flex;
+  gap: 15px;
+}
+.search.field > * {
+  flex-grow: 1;
+}
+#weather-temperature {
+  text-align: right;
+  width: 7ch;
+}
+main > .weather-info,
+.weather-temperature-scale {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3em;
+}
+
+main > .weather-info > img {
+  width: 2em;
+  height: 2em;
+}
+
+main > .gif > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+main > .gif {
+  width: 420px;
+  height: 420px;
+  padding: 0;
+}
+
+img[src=""] {
+  visibility: hidden;
+}
+
+.weather-temperature-scale > input[type="radio"] {
+  appearance: none;
+  font-family: inherit;
+  font-size: 0.8rem;
+  width: fit-content;
+  height: fit-content;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 0.15em 0.3em;
+}
+#weather-temperature-scale-celsius::after {
+  content: "Celsius";
+}
+#weather-temperature-scale-fahrenheit::after {
+  content: "Fahrenheit";
+}
+
+.weather-temperature-scale > input[type="radio"]:checked {
+  color: white;
+  background-color: black;
+}
