@@ -7,6 +7,7 @@ const WEATHER_API_KEY = "44d0e90098b5404081e123835241204";
 const WEATHER_API_URL = `
 http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=
 `;
+const mainEle = document.querySelector("main");
 const locationTextbox = document.getElementById("location-text");
 const weatherCondition = document.getElementById("weather-condition");
 const weatherConditionImage = document.getElementById(
@@ -93,6 +94,7 @@ const setWeatherInfo = () => {
   }
   weatherCondition.textContent = weather.condition;
   weatherConditionImage.src = weather.conditionIconSrc;
+  changeBackgroundsForWeather();
   setTemperature(weather);
 };
 
@@ -108,9 +110,27 @@ const setSolidColorToImage = (img, color) => {
   img.src = canvas.toDataURL();
 };
 
-const getColorForTemperature = (tempInCelsius) => {};
+const getColorForTemperature = (tempInCelsius) => {
+  if (tempInCelsius >= 45) {
+    return "red";
+  } else if (tempInCelsius >= 40) {
+    return "crimson";
+  } else if (tempInCelsius >= 30) {
+    return "lightred";
+  } else if (tempInCelsius >= 20) {
+    return "blue";
+  } else if (tempInCelsius >= 10) {
+    return "lighblue";
+  } else if (tempInCelsius >= 1) {
+    return "turquoise";
+  } else {
+    return "cream";
+  }
+};
 
-const changeBackgroundsForWeather = (weather) => {};
+const changeBackgroundsForWeather = () => {
+  mainEle.style.backgroundColor = getColorForTemperature(weather.temp_c);
+};
 
 const handleError = () => {
   locationTextbox.value = "";
