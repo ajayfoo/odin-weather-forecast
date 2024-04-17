@@ -14,6 +14,7 @@ const weatherTemperatureScaleCelsius = document.getElementById(
   "weather-temperature-scale-celsius"
 );
 const gifImage = document.getElementById("gif-image");
+const loadingModal = document.getElementById("loading-modal");
 const errorModal = document.getElementById("error-modal");
 const errorMessageText = document.getElementById("error-message");
 const closeErrorModalBtn = document.getElementById("close-error-modal");
@@ -170,10 +171,13 @@ const setupEventListeners = () => {
   });
   getWeatherBtn.addEventListener("click", async () => {
     try {
+      loadingModal.showModal();
       weather = await getCurrentWeatherForCity(locationTextbox.value);
     } catch (err) {
       handleError();
       return;
+    } finally {
+      loadingModal.close();
     }
     setWeatherInfo();
     changeBackgroundsForWeather();
