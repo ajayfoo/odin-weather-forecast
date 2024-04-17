@@ -17,6 +17,9 @@ const weatherTemperatureScaleCelsius = document.getElementById(
   "weather-temperature-scale-celsius"
 );
 const gif = document.getElementById("gif-image");
+const errorModal = document.getElementById("error-modal");
+const errorMessageText = document.getElementById("error-message");
+const closeErrorModalBtn = document.getElementById("close-error-modal");
 weather = {};
 
 const currentTemperatureScaleIsCelsius = () =>
@@ -74,9 +77,19 @@ const setTemperature = () => {
     weatherTemperature.textContent = weather.temp_f + "\u00B0" + "F";
   }
 };
+
+const setEmptyWeatherInfo = () => {
+  weather.condition = "";
+  weather.temp_c = "";
+  weather.temp_f = "";
+  weatherCondition.textContent = weather.condition;
+  weatherConditionImage.src = "";
+  weatherTemperature.textContent = "";
+};
 const setWeatherInfo = () => {
   if (!weather.condition) {
-    weather.condition = "Windy";
+    setEmptyWeatherInfo();
+    return;
   }
   weatherCondition.textContent = weather.condition;
   weatherConditionImage.src = weather.conditionIconSrc;
@@ -96,7 +109,20 @@ const setSolidColorToImage = (img, color) => {
 };
 
 const getColorForTemperature = (tempInCelsius) => {};
+
 const changeBackgroundsForWeather = (weather) => {};
+
+const handleError = () => {
+  locationTextbox.value = "";
+  if (window.navigator.onLine) {
+    errorMessageText.textContent = "Location Not found";
+  } else {
+    errorMessageText.textContent = "Internet not accessible";
+  }
+  setEmptyWeatherInfo();
+  errorModal.showModal();
+};
+
 const setupEventListeners = () => {
   const weatherTemperatureScales = document.querySelectorAll(
     ".weather-temperature-scale>input"
@@ -109,14 +135,28 @@ const setupEventListeners = () => {
     });
   });
   getWeatherBtn.addEventListener("click", async () => {
-    weather = await getCurrentWeatherForCity(locationTextbox.value);
+    try {
+      weather = await getCurrentWeatherForCity(locationTextbox.value);
+    } catch (err) {
+      handleError();
+      return;
+    }
     setWeatherInfo();
+  });
+  document.getElementById("close-error-modal").addEventListener("click", () => {
+    console.log("hi");
+    errorModal.close();
   });
 };
 const runApp = async () => {
   const emptyImageColor = "rgba(0,0,0,0.4)";
   setSolidColorToImage(gif, emptyImageColor);
-  weather = await getCurrentWeatherForCity("mumbai");
+  try {
+    weather = await getCurrentWeatherForCity("mumbai");
+  } catch (err) {
+    handleError();
+    return;
+  }
   setWeatherInfo();
   setupEventListeners();
 };

@@ -85,3 +85,18 @@ img[src=""] {
   color: white;
   background-color: black;
 }
+
+#error-modal {
+  border: 0;
+  border-radius: 15px;
+}
+#error-modal > .message-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+#error-modal::backdrop {
+  background-color: black;
+  opacity: 0.75;
+}
