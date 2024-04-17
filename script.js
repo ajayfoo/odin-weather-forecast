@@ -1,12 +1,8 @@
-//real
-const WEATHER_API_KEY = "44d0e90098b5404081e123835241204";
+const WEATHER_API_KEY = null;
+const GIPHY_API_KEY = null;
 
-// fake
-// const WEATHER_API_KEY = "44d0e90098b5404081e121234567890";
-
-const WEATHER_API_URL = `
-http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=
-`;
+const WEATHER_API_URL = `http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=`;
+const GIPHY_API_URL = `https://api.giphy.com/v1/gifs/translate?api_key=${GIPHY_API_KEY}&s=`;
 const mainEle = document.querySelector("main");
 const locationTextbox = document.getElementById("location-text");
 const weatherCondition = document.getElementById("weather-condition");
@@ -17,7 +13,7 @@ const weatherTemperature = document.getElementById("weather-temperature");
 const weatherTemperatureScaleCelsius = document.getElementById(
   "weather-temperature-scale-celsius"
 );
-const gif = document.getElementById("gif-image");
+const gifImage = document.getElementById("gif-image");
 const errorModal = document.getElementById("error-modal");
 const errorMessageText = document.getElementById("error-message");
 const closeErrorModalBtn = document.getElementById("close-error-modal");
@@ -86,6 +82,7 @@ const setEmptyWeatherInfo = () => {
   weatherCondition.textContent = weather.condition;
   weatherConditionImage.src = "";
   weatherTemperature.textContent = "";
+  mainEle.style.backgroundColor = "unset";
 };
 const setWeatherInfo = () => {
   if (!weather.condition) {
@@ -94,7 +91,6 @@ const setWeatherInfo = () => {
   }
   weatherCondition.textContent = weather.condition;
   weatherConditionImage.src = weather.conditionIconSrc;
-  changeBackgroundsForWeather();
   setTemperature(weather);
 };
 
@@ -128,8 +124,25 @@ const getColorForTemperature = (tempInCelsius) => {
   }
 };
 
-const changeBackgroundsForWeather = () => {
+const getGifSrc = async (searchText) => {
+  const response = await fetch(GIPHY_API_URL + searchText, { mode: "cors" });
+  if (!response.ok) {
+    console.error("Something went wrong");
+    throw new Error("STATUS not OK");
+  }
+  const json = await response.json();
+  if (json === null || json.data.length === 0) {
+    console.error("GIF not found");
+    return;
+  }
+  console.log(json);
+  return json.data.images.original.webp;
+};
+
+const changeBackgroundsForWeather = async () => {
   mainEle.style.backgroundColor = getColorForTemperature(weather.temp_c);
+  gifImage.src = "";
+  gifImage.src = await getGifSrc(weather.condition + " weather");
 };
 
 const handleError = () => {
@@ -140,6 +153,7 @@ const handleError = () => {
     errorMessageText.textContent = "Internet not accessible";
   }
   setEmptyWeatherInfo();
+  setSolidColorToImage(gifImage, "rgba(0,0,0,0.4)");
   errorModal.showModal();
 };
 
@@ -162,15 +176,15 @@ const setupEventListeners = () => {
       return;
     }
     setWeatherInfo();
+    changeBackgroundsForWeather();
   });
   document.getElementById("close-error-modal").addEventListener("click", () => {
-    console.log("hi");
     errorModal.close();
   });
 };
 const runApp = async () => {
   const emptyImageColor = "rgba(0,0,0,0.4)";
-  setSolidColorToImage(gif, emptyImageColor);
+  setSolidColorToImage(gifImage, emptyImageColor);
   try {
     weather = await getCurrentWeatherForCity("mumbai");
   } catch (err) {
@@ -178,6 +192,7 @@ const runApp = async () => {
     return;
   }
   setWeatherInfo();
+  changeBackgroundsForWeather();
   setupEventListeners();
 };
 
